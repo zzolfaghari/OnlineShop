@@ -1,0 +1,46 @@
+{% extends "order/base.html" %}
+{% load static %}
+{% block title %}
+Your shopping cart
+{% endblock %}
+{% block content %}
+<h1 style="text-align: right">محتویات سبد خرید شما</h1>
+<table class="cart">
+<thead>
+<tr>
+<th>تصویر</th>
+<th>محصول</th>
+<th>تعداد</th>
+<th>حذف</th>
+<th>قیمت واحد</th>
+<th>قیمت</th>
+</tr>
+</thead>
+<tbody>{% for item in cart %}
+    {% with product=item.product %}
+<tr>
+<td>
+<a href="{{ product.get_absolute_url }}">
+<img src="{% if product.image %}{{ product.image.url }} {% else %}{% static "img/no_image.png" %}{% endif %}">
+</a>
+</td>
+<td>{{ product.name }}</td>
+<td>{{ item.quantity }}</td>
+<td><a href="{% url "cart:cart_remove" product.id%}">حذف</a></td>
+<td class="num">${{ item.price }}</td>
+<td class="num">${{ item.total_price }}</td>
+</tr>
+{% endwith %}
+{% endfor %}
+<tr class="total">
+<td>مجموع</td>
+<td colspan="4"></td>
+<td class="num">${{ cart.get_total_price }}</td>
+</tr>
+</tbody>
+</table>
+<p class="text-right">
+<a href="{% url "shop:product_list" %}" class="button light">ادامه خرید</a>
+<a href="{% url "buy:order_create" %}" class="button">صورت حساب</a>
+</p>
+{% endblock %}
